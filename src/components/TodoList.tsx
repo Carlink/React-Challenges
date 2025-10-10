@@ -1,4 +1,5 @@
 import Collapsible from "./Collapsible";
+import { useState } from "React";
 
 const Instructions = () => (
   <>
@@ -10,8 +11,48 @@ const Instructions = () => (
   </>
 );
 
+type Todo = {
+  key: string;
+  value: string;
+};
+
 const App = () => {
-  return <i>Content here</i>;
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [task, setTask] = useState<string>("");
+
+  const handleAddTodo = () => {
+    const uuid = crypto.randomUUID();
+    setTodos([...todos, { key: uuid, value: task }]);
+    setTask("");
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const val = event.target.value;
+    setTask(val);
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleAddTodo();
+    }
+  };
+
+  return (
+    <>
+      <input
+        value={task}
+        onChange={handleChange}
+        onKeyDown={handleKeyPress}
+      ></input>
+      <button onClick={handleAddTodo}>Add</button>
+
+      <ul>
+        {todos.map((todo) => {
+          return <li key={todo.key}>{todo.value}</li>;
+        })}
+      </ul>
+    </>
+  );
 };
 
 const TodoList = () => {
