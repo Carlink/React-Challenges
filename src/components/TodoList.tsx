@@ -1,5 +1,5 @@
+import React from "react";
 import Collapsible from "./Collapsible";
-import { useState } from "React";
 
 const Instructions = () => (
   <>
@@ -17,8 +17,8 @@ type Todo = {
 };
 
 const App = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [task, setTask] = useState<string>("");
+  const [todos, setTodos] = React.useState<Todo[]>([]);
+  const [task, setTask] = React.useState<string>("");
 
   const handleAddTodo = () => {
     const uuid = crypto.randomUUID();
@@ -37,6 +37,11 @@ const App = () => {
     }
   };
 
+  const handleRemove = (toBeRemovedKey: string) => {
+    const newTodos = todos.filter((todo) => todo.key !== toBeRemovedKey);
+    setTodos(newTodos);
+  };
+
   return (
     <>
       <input
@@ -48,7 +53,17 @@ const App = () => {
 
       <ul>
         {todos.map((todo) => {
-          return <li key={todo.key}>{todo.value}</li>;
+          return (
+            <li key={todo.key}>
+              <button
+                type="button"
+                onClick={() => handleRemove(todo.key)}
+                aria-label={`Remove ${todo.value}`}
+              >
+                {todo.value}
+              </button>
+            </li>
+          );
         })}
       </ul>
     </>
